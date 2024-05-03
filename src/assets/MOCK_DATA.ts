@@ -8000,5 +8000,3 @@ export const data = [
         "address": "PO Box 28360"
     }
 ]
-
-export type Data = (typeof data)[number]

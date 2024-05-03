@@ -6,8 +6,13 @@ import  { data} from "./assets/MOCK_DATA"
 
 
 
-
-
+const modifiedData = data.map(item => {
+  return {
+    ...item,
+    id: String(item.id) // Convert the ID number to a string
+  };
+});
+export type modifiedDataType = (typeof modifiedData)[number]
 function App() {
 
 
@@ -16,7 +21,7 @@ function App() {
        <div  style={{
         overflowX: "auto"
       }}>
-        <GetTable isPagination={true} data={data} pageSize={10}/>
+        <GetTable isPagination={true} data={modifiedData} pageSize={10}/>
       </div>
     </>
   )

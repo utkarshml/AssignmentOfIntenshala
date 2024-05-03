@@ -1,6 +1,6 @@
 import { ColumnDef, flexRender, getCoreRowModel, SortingState, getPaginationRowModel, getSortedRowModel, useReactTable, Row, Header, Cell } from "@tanstack/react-table"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { FcGenericSortingAsc, FcGenericSortingDesc } from "react-icons/fc";
 // needed for table body level scope DnD setup
 import {
@@ -26,7 +26,7 @@ import {
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { CSSProperties } from 'react';
-import { Data } from "./assets/MOCK_DATA";
+import { modifiedDataType } from "./App";
 
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
@@ -45,7 +45,7 @@ const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
 const DraggableTableHeader = ({
   header,
 }: {
-  header: Header<Data, unknown>
+  header: Header<modifiedDataType, unknown>
 }) => {
   const { isDragging, attributes, listeners, setNodeRef, transform } =
     useSortable({
@@ -89,7 +89,7 @@ const DraggableTableHeader = ({
   )
 }
 
-const DragAlongCell = ({ cell }: { cell: Cell<Data, unknown> }) => {
+const DragAlongCell = ({ cell }: { cell: Cell<modifiedDataType, unknown> }) => {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
   });
@@ -111,7 +111,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<Data, unknown> }) => {
 };
 
 // Row Component
-const DraggableRow = ({ row }: { row: Row<Data> }) => {
+const DraggableRow = ({ row }: { row: Row<modifiedDataType> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,
   })
@@ -141,7 +141,7 @@ interface DataTableProp<TData> {
   isPagination?: true
 }
 
-const CustomerCol: ColumnDef<Data>[] = [
+const CustomerCol: ColumnDef<modifiedDataType>[] = [
   {
     id: 'drag-handle',
     header: 'Move',
@@ -187,16 +187,16 @@ const CustomerCol: ColumnDef<Data>[] = [
   },
 ]
 
-function GetTable({ data, pageSize = 5, isPagination }: DataTableProp<Data>) {
+function GetTable({ data, pageSize = 5, isPagination }: DataTableProp<modifiedDataType>) {
   const [columnHover, setColumnHover] = React.useState(false);
-  const [tableData , setTableData] = React.useState<Data[]>(data) ;
+  const [tableData , setTableData] = React.useState<modifiedDataType[]>(data) ;
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     CustomerCol.map(c => c.id!)
   )
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ id }) => id),
-    [data]
+    () => tableData?.map(({ id }) => id),
+    [tableData]
   )
   const [sorting, setSorting] = useState<SortingState>([])
   const { getHeaderGroups, getRowModel, previousPage, nextPage, getCanNextPage, getCanPreviousPage, getPageCount, getState } = useReactTable({
@@ -206,7 +206,7 @@ function GetTable({ data, pageSize = 5, isPagination }: DataTableProp<Data>) {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getRowId: (row) => row.id.toString(), //required because row indexes will change
+    getRowId: (row) => row.id, //required because row indexes will change
     onColumnOrderChange: setColumnOrder,
     debugHeaders: true,
     debugColumns: true,
