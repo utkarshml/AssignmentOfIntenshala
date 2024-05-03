@@ -189,10 +189,11 @@ const CustomerCol: ColumnDef<Data>[] = [
 
 function GetTable({ data, pageSize = 5, isPagination }: DataTableProp<Data>) {
   const [columnHover, setColumnHover] = React.useState(false);
-  const [tableData , setTableData] = React.useState<Data[]>(data);
+  const [tableData , setTableData] = React.useState<Data[]>(data) ;
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     CustomerCol.map(c => c.id!)
   )
+
   const dataIds = React.useMemo<UniqueIdentifier[]>(
     () => data?.map(({ id }) => id),
     [data]
@@ -205,7 +206,7 @@ function GetTable({ data, pageSize = 5, isPagination }: DataTableProp<Data>) {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getRowId: (row) => row.id, //required because row indexes will change
+    getRowId: (row) => row.id.toString(), //required because row indexes will change
     onColumnOrderChange: setColumnOrder,
     debugHeaders: true,
     debugColumns: true,
